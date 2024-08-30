@@ -1,6 +1,6 @@
 from django.shortcuts import render
 import pathlib
-from src.visits.models import PageVisit
+from visits.models import PageVisit
 
 
 def home_view(request, *args, **kwargs):
@@ -22,6 +22,6 @@ def about_view(request, *args, **kwargs):
         "total_visit_count": qs.count(),
     }
     html_template = "home.html"
-    PageVisit.objects.cteate(path=request.path)
+    PageVisit.objects.create(path=request.path)
     return render(request, html_template, my_context)
 
