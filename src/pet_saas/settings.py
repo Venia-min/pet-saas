@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.github",
     "widget_tweaks",
     "slippers",
 
@@ -211,4 +212,4 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Allauth UI theme
-ALLAUTH_UI_THEME = "dark"
+ALLAUTH_UI_THEME = "luxury"
