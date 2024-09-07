@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.github",
     "widget_tweaks",
     "slippers",
-
 ]
 
 MIDDLEWARE = [
@@ -168,7 +167,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Provider specific settings
-SOCIALACCOUNT_PROVIDERS = {}
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "VERIFIED_EMAIL": True
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
