@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # my apps
     "commando",
+    "profiles",
+    "subscriptions",
     "visits",
     # third-party-apps
     "allauth_ui",
@@ -214,5 +216,6 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Allauth UI theme
+# Allauth UI settings
 ALLAUTH_UI_THEME = "luxury"
+SILENCED_SYSTEM_CHECKS = ["slippers.E001"]
