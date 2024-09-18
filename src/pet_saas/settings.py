@@ -25,7 +25,7 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DJANGO_DEBUG", cast=bool)
-
+BASE_URL = config("BASE_URL", default=None)
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config("EMAIL_HOST", cast=str, default=None)
