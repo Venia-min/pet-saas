@@ -12,6 +12,17 @@ if "sk_test" in STRIPE_SECRET_KEY and not DJANGO_DEBUG:
 stripe.api_key = STRIPE_SECRET_KEY
 
 
+def serialize_subscription_data(subscription_response):
+    status = subscription_response.status
+    current_period_start = date_utils.timestamp_as_datetime(subscription_response.current_period_start)
+    current_period_end = date_utils.timestamp_as_datetime(subscription_response.current_period_end)
+    return {
+        "current_period_start": current_period_start,
+        "current_period_end": current_period_end,
+        "status": status,
+    }
+
+
 def create_customer(
         name="",
         email="",
@@ -99,7 +110,7 @@ def get_subscription(stripe_id, raw=True):
         )
     if raw:
         return response
-    return response.url
+    return serialize_subscription_data(response)
 
 
 def cancel_subscription(stripe_id, reason="", feedback="other", raw=True):
@@ -121,13 +132,12 @@ def get_checkout_customer_plan(session_id):
     sub_stripe_id = checkout_r.subscription
     sub_r = get_subscription(sub_stripe_id, raw=True)
     sub_plan = sub_r.plan
-    current_period_start = date_utils.timestamp_as_datetime(sub_r.current_period_start)
-    current_period_end = date_utils.timestamp_as_datetime(sub_r.current_period_end)
+    subscription_data = serialize_subscription_data(sub_r)
+
     data = {
         "customer_id": customer_id,
         "plan_id": sub_plan.id,
         "sub_stripe_id": sub_stripe_id,
-        "current_period_start": current_period_start,
-        "current_period_end": current_period_end
+        **subscription_data,
     }
     return data
