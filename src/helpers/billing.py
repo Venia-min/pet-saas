@@ -17,9 +17,9 @@ def serialize_subscription_data(subscription_response):
     current_period_start = date_utils.timestamp_as_datetime(subscription_response.current_period_start)
     current_period_end = date_utils.timestamp_as_datetime(subscription_response.current_period_end)
     return {
+        "status": status,
         "current_period_start": current_period_start,
         "current_period_end": current_period_end,
-        "status": status,
     }
 
 
