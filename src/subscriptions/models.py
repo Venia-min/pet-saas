@@ -172,10 +172,21 @@ class UserSubscription(models.Model):
     original_period_start = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     current_period_start = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     current_period_end = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
+    cancel_at_period_end = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=SubscriptionStatus.choices, blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse("user_subscription")
+
+    def get_cancel_url(self):
+        return reverse("user_subscription_cancel")
+
+    @property
+    def is_active_status(self):
+        return self.status in [
+            SubscriptionStatus.ACTIVE,
+            SubscriptionStatus.TRIALING
+        ]
 
     @property
     def plan_name(self):
