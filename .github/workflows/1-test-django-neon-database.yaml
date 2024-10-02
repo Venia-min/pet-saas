@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   test:
@@ -42,13 +42,19 @@ jobs:
         run: |
           MY_NEON_CONN_STRING=$(neonctl connection-string --branch "${{ env.NEON_GITHUB_BRANCH }}" --project-id "${{ env.NEON_PROJECT_ID }}")
           echo "DATABASE_URL=$MY_NEON_CONN_STRING" >> $GITHUB_ENV
+      - name: Setup Django Secret Key
+        run: |
+          MY_GEN_KEY=$(openssl rand -base64 32)
+          echo "DJANGO_SECRET_KEY=$MY_GEN_KEY" >> $GITHUB_ENV
       - name: Install Requirements
         run: |
           python -m pip install pip --upgrade
           python -m pip install -r requirements.txt
       - name: Django Tests
         working-directory: ./src
-        env:
-          DJANGO_SECRET_KEY: not-good
         run: |
           python manage.py test
+      - name: Clean Up Step
+        continue-on-error: true
+        run: |
+          neonctl branches delete "${{ env.NEON_GITHUB_BRANCH }}" --project-id "${{ env.NEON_PROJECT_ID }}"
