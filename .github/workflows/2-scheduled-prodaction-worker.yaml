@@ -11,8 +11,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      DJANGO_DEBUG: 0
-      STRIPE_SECRET_KEY: ${{ env.STRIPE_SECRET_KEY }}
+      DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+      STRIPE_TEST_OVERRIDE: 1
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
       NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
       NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
       NEON_PROD_BRANCH: "main"
@@ -42,6 +43,10 @@ jobs:
         run: |
           python -m pip install pip --upgrade
           python -m pip install -r requirements.txt
+      - name: Django Migrate Database
+        working-directory: ./src
+        run: |
+          python manage.py migrate
       - name: Django User Sync Stripe Subscriptions
         if: github.actions.schedule != '0 4 1 * *'
         working-directory: ./src
