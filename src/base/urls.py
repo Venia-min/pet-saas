@@ -1,22 +1,8 @@
-"""pet_saas URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from auth import views as auth_views
 from checkouts import views as checkout_views
+from landing import views as landing_views
 from subscriptions import views as subscriptions_views
 from .views import (
     home_view,
@@ -28,9 +14,7 @@ from .views import (
 
 
 urlpatterns = [
-    path("", home_view, name="home"),
-    # path("login/", auth_views.login_view),
-    # path("register/", auth_views.register_view),
+    path("", landing_views.landing_dashboard_page_view, name="home"),
     path("checkout/sub-price/<int:price_id>/", checkout_views.product_price_redirect_view, name='sub-price-checkout'),
     path("checkout/start/", checkout_views.checkout_redirect_view, name='stripe-checkout-start'),
     path("checkout/success/", checkout_views.checkout_finalize_view, name='stripe-checkout-end'),
