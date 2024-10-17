@@ -11,7 +11,8 @@ class Command(BaseCommand):
         parser.add_argument("--day-end", default=0, type=int)
         parser.add_argument("--days-left", default=0, type=int)
         parser.add_argument("--days-ago", default=0, type=int)
-        parser.add_argument("--clear-dangling", action="store_true", default=False)
+        parser.add_argument("--clear-dangling", action="store_true",
+                            default=False)
 
     def handle(self, *args: Any, **options: Any):
         day_start = options.get("day_start")

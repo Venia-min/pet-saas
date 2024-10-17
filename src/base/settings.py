@@ -29,11 +29,13 @@ BASE_URL = config("BASE_URL", default=None)
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config("EMAIL_HOST", cast=str, default=None)
-EMAIL_PORT = config("EMAIL_PORT", cast=str, default='587') # Recommended
+EMAIL_PORT = config("EMAIL_PORT", cast=str, default='587')  # Recommended
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str, default=None)
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)  # Use EMAIL_PORT 587 for TLS
-EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)  # Use EMAIL_PORT 465 for SSL
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)
+# Use EMAIL_PORT 587 for TLS
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)
+# Use EMAIL_PORT 465 for SSL
 
 ADMIN_USER_NAME = config("ADMIN_USER_NAME", default="Admin user")
 ADMIN_USER_EMAIL = config("ADMIN_USER_EMAIL", default=None)
@@ -47,7 +49,7 @@ if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
     MANAGERS = ADMINS
 
 ALLOWED_HOSTS = [
-    ".railway.app" # https://saas.prod.railway.app
+    ".railway.app"  # https://saas.prod.railway.app
 ]
 if DEBUG:
     ALLOWED_HOSTS += [

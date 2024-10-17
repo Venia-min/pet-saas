@@ -36,10 +36,14 @@ class Subscription(models.Model):
     )
     stripe_id = models.CharField(max_length=120, null=True, blank=True)
 
-    order = models.IntegerField(default=-1,
-                                help_text='Ordering in Django subscription page')
-    featured = models.BooleanField(default=True,
-                                   help_text='Featured in Django subscription page')
+    order = models.IntegerField(
+        default=-1,
+        help_text='Ordering in Django subscription page'
+    )
+    featured = models.BooleanField(
+        default=True,
+        help_text='Featured in Django subscription page'
+    )
     update = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     features = (models.TextField

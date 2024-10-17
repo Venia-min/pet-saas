@@ -1,9 +1,10 @@
 from django.shortcuts import render
-import pathlib
-from visits.models import PageVisit
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.conf import settings
+
+from visits.models import PageVisit
+
 
 LOGIN_URL = settings.LOGIN_URL
 
@@ -17,7 +18,7 @@ def about_view(request, *args, **kwargs):
     page_qs = PageVisit.objects.filter(path=request.path)
     try:
         percent = (page_qs.count() * 100.0) / qs.count()
-    except:
+    except Exception:
         percent = 0
     my_title = "My Page"
     my_context = {
