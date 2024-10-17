@@ -36,11 +36,15 @@ class Subscription(models.Model):
     )
     stripe_id = models.CharField(max_length=120, null=True, blank=True)
 
-    order = models.IntegerField(default=-1, help_text='Ordering in Django subscription page')
-    featured = models.BooleanField(default=True, help_text='Featured in Django subscription page')
+    order = models.IntegerField(default=-1,
+                                help_text='Ordering in Django subscription page')
+    featured = models.BooleanField(default=True,
+                                   help_text='Featured in Django subscription page')
     update = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-    features = models.TextField(help_text="Features for pricing, separated by new line", blank=True, null=True)
+    features = (models.TextField
+                (help_text="Features for pricing, separated by new line",
+                 blank=True, null=True))
 
     def __str__(self):
         return f"{self.name}"
@@ -71,15 +75,19 @@ class SubscriptionPrice(models.Model):
         MONTHLY = "month", "Monthly"
         YEARLY = "year", "Yearly"
 
-    subscription = models.ForeignKey(Subscription, on_delete=models.SET_NULL, null=True)
+    subscription = models.ForeignKey(Subscription, on_delete=models.SET_NULL,
+                                     null=True)
     stripe_id = models.CharField(max_length=120, null=True, blank=True)
     interval = models.CharField(max_length=120,
                                 default=IntervalChoices.MONTHLY,
                                 choices=IntervalChoices.choices
                                 )
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=99.99)
-    order = models.IntegerField(default=-1, help_text='Ordering in Django pricing page')
-    featured = models.BooleanField(default=True, help_text='Featured in Django pricing page')
+    price = models.DecimalField(max_digits=10, decimal_places=2,
+                                default=99.99)
+    order = models.IntegerField(default=-1,
+                                help_text='Ordering in Django pricing page')
+    featured = models.BooleanField(default=True,
+                                   help_text='Featured in Django pricing page')
     update = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -165,8 +173,10 @@ class UserSubscriptionQuerySet(models.QuerySet):
         now = timezone.now()
         day_start_from_now = now + datetime.timedelta(days=day_start)
         day_end_from_now = now + datetime.timedelta(days=day_end)
-        range_start = day_start_from_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        range_end = day_end_from_now.replace(hour=23, minute=59, second=59, microsecond=999999)
+        range_start = day_start_from_now.replace(hour=0, minute=0, second=0,
+                                                 microsecond=0)
+        range_end = day_end_from_now.replace(hour=23, minute=59, second=59,
+                                             microsecond=999999)
         if verbose:
             print(f"Range is {range_start} to {range_end}")
         return self.filter(
@@ -177,8 +187,10 @@ class UserSubscriptionQuerySet(models.QuerySet):
     def by_days_left(self, days_left=7):
         now = timezone.now()
         in_n_days = now + datetime.timedelta(days=days_left)
-        day_start = in_n_days.replace(hour=0, minute=0, second=0, microsecond=0)
-        day_end = in_n_days.replace(hour=23, minute=59, second=59, microsecond=999999)
+        day_start = in_n_days.replace(hour=0, minute=0, second=0,
+                                      microsecond=0)
+        day_end = in_n_days.replace(hour=23, minute=59, second=59,
+                                    microsecond=999999)
         return self.filter(
             current_period_end__gte=day_start,
             current_period_end__lte=day_end
@@ -188,8 +200,10 @@ class UserSubscriptionQuerySet(models.QuerySet):
     def by_days_ago(self, days_ago=3):
         now = timezone.now()
         in_n_days = now - datetime.timedelta(days=days_ago)
-        day_start = in_n_days.replace(hour=0, minute=0, second=0, microsecond=0)
-        day_end = in_n_days.replace(hour=23, minute=59, second=59, microsecond=999999)
+        day_start = in_n_days.replace(hour=0, minute=0, second=0,
+                                      microsecond=0)
+        day_end = in_n_days.replace(hour=23, minute=59, second=59,
+                                    microsecond=999999)
         return self.filter(
             current_period_end__gte=day_start,
             current_period_end__lte=day_end
@@ -198,8 +212,8 @@ class UserSubscriptionQuerySet(models.QuerySet):
 
     def by_active_trialing(self):
         active_qs_lookup = (
-            Q(status = SubscriptionStatus.ACTIVE) |
-            Q(status = SubscriptionStatus.TRIALING)
+            Q(status=SubscriptionStatus.ACTIVE) |
+            Q(status=SubscriptionStatus.TRIALING)
         )
         return self.filter(active_qs_lookup)
 
@@ -231,11 +245,19 @@ class UserSubscription(models.Model):
     stripe_id = models.CharField(max_length=120, null=True, blank=True)
     active = models.BooleanField(default=True)
     user_cancelled = models.BooleanField(default=False)
-    original_period_start = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
-    current_period_start = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
-    current_period_end = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
+    original_period_start = models.DateTimeField(auto_now=False,
+                                                 auto_now_add=False,
+                                                 blank=True, null=True)
+    current_period_start = models.DateTimeField(auto_now=False,
+                                                auto_now_add=False,
+                                                blank=True, null=True)
+    current_period_end = models.DateTimeField(auto_now=False,
+                                              auto_now_add=False,
+                                              blank=True, null=True)
     cancel_at_period_end = models.BooleanField(default=False)
-    status = models.CharField(max_length=20, choices=SubscriptionStatus.choices, blank=True, null=True)
+    status = models.CharField(max_length=20,
+                              choices=SubscriptionStatus.choices,
+                              blank=True, null=True)
 
     objects = UserSubscriptionManager()
 
@@ -277,7 +299,8 @@ class UserSubscription(models.Model):
         return int(self.current_period_end.timestamp())
 
     def save(self, *args, **kwargs):
-        if self.original_period_start is None and self.current_period_start is not None:
+        if (self.original_period_start is None and
+                self.current_period_start is not None):
             self.original_period_start = self.current_period_start
         super().save(*args, **kwargs)
 

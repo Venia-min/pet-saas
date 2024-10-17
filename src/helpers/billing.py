@@ -1,13 +1,22 @@
 import stripe
+
 from decouple import config
 
 from . import date_utils
 
-DJANGO_DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
-STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY", default="", cast=str)
-STRIPE_TEST_OVERRIDE = config("STRIPE_TEST_OVERRIDE", default="False", cast=bool)
 
-if "sk_test" in STRIPE_SECRET_KEY and not DJANGO_DEBUG and not STRIPE_TEST_OVERRIDE:
+DJANGO_DEBUG = config("DJANGO_DEBUG",
+                      default=False,
+                      cast=bool)
+STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY",
+                           default="",
+                           cast=str)
+STRIPE_TEST_OVERRIDE = config("STRIPE_TEST_OVERRIDE",
+                              default="False",
+                              cast=bool)
+
+if ("sk_test" in STRIPE_SECRET_KEY and not DJANGO_DEBUG and
+        not STRIPE_TEST_OVERRIDE):
     raise ValueError("Invalid stripe key for prod")
 
 stripe.api_key = STRIPE_SECRET_KEY
@@ -15,8 +24,10 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 def serialize_subscription_data(subscription_response):
     status = subscription_response.status
-    current_period_start = date_utils.timestamp_as_datetime(subscription_response.current_period_start)
-    current_period_end = date_utils.timestamp_as_datetime(subscription_response.current_period_end)
+    current_period_start = date_utils.timestamp_as_datetime(
+        subscription_response.current_period_start)
+    current_period_end = date_utils.timestamp_as_datetime(
+        subscription_response.current_period_end)
     cancel_at_period_end = subscription_response.cancel_at_period_end
     return {
         "status": status,
@@ -124,7 +135,10 @@ def get_customer_active_subscriptions(customer_stripe_id):
     return response
 
 
-def cancel_subscription(stripe_id, reason="", feedback="other", cancel_at_period_end=False, raw=True):
+def cancel_subscription(
+        stripe_id, reason="",
+        feedback="other",
+        cancel_at_period_end=False, raw=True):
     if cancel_at_period_end:
         response = stripe.Subscription.modify(
             stripe_id,

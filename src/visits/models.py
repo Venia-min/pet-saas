@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class PageVisit(models.Model):
     # db -> table
     # id -> primary key -> autofield

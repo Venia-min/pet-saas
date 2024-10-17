@@ -10,20 +10,29 @@ from subscriptions import utils as subs_utils
 
 @login_required
 def user_subscription_view(request):
-    user_sub_obj, created = UserSubscription.objects.get_or_create(user=request.user)
+    user_sub_obj, created = UserSubscription.objects.get_or_create(
+        user=request.user)
     if request.method == "POST":
-        finished = subs_utils.refresh_active_users_subscriptions(user_ids=[request.user.id], active_only=False)
+        finished = (subs_utils.refresh_active_users_subscriptions
+                    (user_ids=[request.user.id], active_only=False))
         if finished:
             messages.success(request, "You plan details have been refreshed.")
         else:
-            messages.error(request, "You plan details have not been refreshed, please try again.")
+            messages.error(
+                request,
+                "You plan details have not been refreshed, please try again.")
         return redirect(user_sub_obj.get_absolute_url())
-    return render(request, 'subscriptions/user_detail_view.html', {"subscription": user_sub_obj})
+    return render(
+        request,
+        'subscriptions/user_detail_view.html',
+        {"subscription": user_sub_obj}
+    )
 
 
 @login_required
 def user_subscription_cancel_view(request):
-    user_sub_obj, created = UserSubscription.objects.get_or_create(user=request.user)
+    user_sub_obj, created = (UserSubscription.objects.get_or_create
+                             (user=request.user))
     if request.method == "POST":
         if user_sub_obj.stripe_id and user_sub_obj.is_active_status:
             sub_data = helpers.billing.cancel_subscription(
@@ -38,7 +47,11 @@ def user_subscription_cancel_view(request):
             user_sub_obj.save()
             messages.success(request, "You plan has been cancelled")
         return redirect(user_sub_obj.get_absolute_url())
-    return render(request, 'subscriptions/user_cancel_view.html', {"subscription": user_sub_obj})
+    return render(
+        request,
+        'subscriptions/user_cancel_view.html',
+        {"subscription": user_sub_obj}
+    )
 
 
 def subscription_price_view(request, interval="month"):

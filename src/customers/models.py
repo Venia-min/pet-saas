@@ -26,7 +26,8 @@ class Customer(models.Model):
             if self.init_email_confirmed and self.init_email:
                 email = self.init_email
                 if email != "" or email is not None:
-                    stripe_id = create_customer(email=email,
+                    stripe_id = create_customer(
+                        email=email,
                         metadata={
                             "user_id": self.user.id,
                             "username": self.user.username
@@ -53,7 +54,7 @@ def allauth_email_confirmed_handler(request, email_address, *args, **kwargs):
         init_email_confirmed=False,
     )
     for obj in qs:
-        obj.init_email_confirmed=True
+        obj.init_email_confirmed = True
         # send the signal
         obj.save()
 

@@ -1,7 +1,7 @@
 import helpers.billing
 
 from customers.models import Customer
-from subscriptions.models import UserSubscription, Subscription, SubscriptionStatus
+from subscriptions.models import UserSubscription, Subscription
 
 
 def refresh_active_users_subscriptions(
@@ -27,9 +27,11 @@ def refresh_active_users_subscriptions(
     qs_count = qs.count()
     for obj in qs:
         if verbose:
-            print("Updating user", obj.user, obj.subscription, obj.current_period_end)
+            print("Updating user", obj.user, obj.subscription,
+                  obj.current_period_end)
         if obj.stripe_id:
-            sub_data = helpers.billing.get_subscription(obj.stripe_id, raw=False)
+            sub_data = (helpers.billing.get_subscription
+                        (obj.stripe_id, raw=False))
             for k, v in sub_data.items():
                 setattr(obj, k, v)
             obj.save()
@@ -40,11 +42,13 @@ def refresh_active_users_subscriptions(
 def clear_dangling_subs():
     qs = Customer.objects.filter(stripe_id__isnull=False)
     for customer_obj in qs:
-        user = customer_obj.user
+        # user = customer_obj.user
         customer_stripe_id = customer_obj.stripe_id
-        subs = helpers.billing.get_customer_active_subscriptions(customer_stripe_id)
+        subs = (helpers.billing.get_customer_active_subscriptions
+                (customer_stripe_id))
         for sub in subs:
-            existing_user_subs_qs = UserSubscription.objects.filter(stripe_id__iexact=f"{sub.id}".strip())
+            existing_user_subs_qs = (UserSubscription.objects.filter
+                                     (stripe_id__iexact=f"{sub.id}".strip()))
             if existing_user_subs_qs.exists():
                 continue
             helpers.billing.cancel_subscription(
